@@ -17,7 +17,7 @@ ROTATION = int(app.config['ROTATION'])
 disp = ST7789.ST7789(
     port=0,
     cs=ST7789.BG_SPI_CS_FRONT,  # BG_SPI_CS_BACK or BG_SPI_CS_FRONT
-    dc=9,
+    dc=int(app.config['DC']),
     backlight=19,               # 18 for back BG slot, 19 for front BG slot.
     spi_speed_hz=80 * 1000 * 1000,
     offset_left=0
@@ -45,6 +45,8 @@ def allowed_file(filename):
 
 def can_handle_html():
     return "text/html" in request.headers.get('Accept')
+
+last_file = ''
 
 try:
     last_file_saved=open("last_file.json")
