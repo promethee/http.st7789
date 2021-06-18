@@ -46,6 +46,14 @@ def allowed_file(filename):
 def can_handle_html():
     return "text/html" in request.headers.get('Accept')
 
+try:
+    last_file_saved=open("last_file.json")
+    last_file = last_file_saved.read()
+    last_file_saved.close()
+    show_image(last_file)
+except FileNotFoundError:
+    pass
+
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
@@ -61,10 +69,13 @@ def upload_file():
         # empty file without a filename.
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
+            previous_filename=last_file
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             last_file_saved=open("last_file.json", "w")
             last_file_saved.write(filename)
             last_file_saved.close()
+            if previous_filename != filename:
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], previous_filename))
             if not show_image(filename):
                 return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
 
@@ -79,10 +90,3 @@ def upload_file():
     else:
         return json.dumps({'success':True}), 204, {'ContentType':'application/json'}
 
-try:
-    last_file_saved=open("last_file.json")
-    last_file = last_file_saved.read()
-    last_file_saved.close()
-    show_image(last_file)
-except FileNotFoundError:
-    pass
