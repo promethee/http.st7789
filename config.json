@@ -1,5 +1,6 @@
 {
   "ROTATION": 180,
   "UPLOAD_FOLDER": "/var/tmp",
-  "ALLOWED_EXTENSIONS": ["png", "jpg", "jpeg"]
+  "ALLOWED_EXTENSIONS": ["png", "jpg", "jpeg"],
+  "DC": 9
 }
