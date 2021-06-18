@@ -69,13 +69,12 @@ def upload_file():
         # empty file without a filename.
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            previous_filename=last_file
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             last_file_saved=open("last_file.json", "w")
             last_file_saved.write(filename)
             last_file_saved.close()
-            if previous_filename != filename:
-                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], previous_filename))
+            if last_file != filename:
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], last_file))
             if not show_image(filename):
                 return json.dumps({'success':False}), 500, {'ContentType':'application/json'}
 
